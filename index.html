@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
-    <title>Document</title>
-</head>
-<body onload="initGame()">
-    <h1>Minesweeper</h1>
-    <div>
-        <table>
-            <tbody class="board">
-
-            </tbody>
-        </table>
-    </div>
-<footer><p>Shaul Gabrieli</p></footer>
-    <script src="js/utils.js"></script>
-    <script src="js/main.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="css/main.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Amatic+SC&family=Press+Start+2P&display=swap" rel="stylesheet" />
+        <title>Document</title>
+    </head>
+    <body onload="initGame()">
+        <h1>Minesweeper</h1>
+        <button onclick="gameLevel(EASY)">Easy</button>
+        <button onclick="gameLevel(MEDIUM)">Medium</button>
+        <button onclick="gameLevel(HARD)">Hard</button>
+        <div class="container">
+            <table>
+                <tbody class="board"></tbody>
+            </table>
+        </div>
+        <button>Play Again</button>
+        <button>Dark Mode</button>
+        <footer><p>Shaul Gabrieli</p></footer>
+        <script src="js/utils.js"></script>
+        <script src="js/main.js"></script>
+    </body>
 </html>

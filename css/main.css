@@ -49,7 +49,7 @@ font-family: 'Press Start 2P', cursive; */
 button {
     cursor: pointer;
     font-family: 'Press Start 2P', cursive;
-    width: 120px;
+    width: 125px;
     height: 50px;
     font-size: 15px;
     margin: 0px 5px 0px;
@@ -66,16 +66,17 @@ button:active{
 }
 
 .hearts{
-    position: absolute;
+    /* position: absolute; */
     font-size: 30px;
-    left: 800px;
-    top: 200px;
+    /* left: 800px;
+    top: 200px; */
+    display: inline-block;
 
 }
 
-.hearts span {
+/* .hearts span {
     display: block;
-}
+} */
 
 p {
     font-family: 'Amatic SC', cursive;
@@ -84,16 +85,25 @@ p {
 .timer{
     font-size: 30px;
     margin-top: 20px;
+    margin-bottom: 10px;
     color: rgb(15, 15, 15);
 }
 
 .hints{
-    position: absolute;
+    /* position: absolute; */
     font-size: 30px;
-    left: 1070px;
-    top: 200px;
+    /* left: 1070px;
+    top: 200px; */
+    display: inline-block;
 }
 
-.hints span {
+/* .hints span {
     display: block;
+} */
+
+.flag{
+    display: inline;
+    font-size: 20px;
+    margin-top: 30px;
+    color: rgb(15, 15, 15);
 }

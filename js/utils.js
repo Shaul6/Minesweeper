@@ -92,11 +92,10 @@ function activeHint(cellI, cellJ) {
                 var currCell = gBoard[i][j]
                 currCell = ' '
                 if (isDark) {
-                    elCell.style.backgroundColor = 'black'
+                    elCell.style.backgroundColor = 'grey'
                     elCell.style.color = 'rgb(235, 235, 235)'
                 } else {
                     elCell.style.backgroundColor = 'grey'
-                    console.log('render', elCell)
                 }
                 renderCell({ i, j }, currCell)
             }
@@ -104,12 +103,11 @@ function activeHint(cellI, cellJ) {
     }, 1000)
     gIsHintActive = !gIsHintActive
     gHintsLeft--
-    console.log('gHintsLeft', gHintsLeft);
 }
 
 function cellClicked(i, j) {
+    clearTimeout(gSafeTimeout)
     if (!gGame.isOn) timer()
-
     if (gBombsTillLose === 0) return
     MinesOnFirstClick(i, j)
     const cellClassName = getClassName({ i, j })
@@ -119,7 +117,6 @@ function cellClicked(i, j) {
         return
     }
     clearTimeout(gHintTimout)
-    console.log('gboard', gBoard)
     if (isDark) {
         elCell.style.backgroundColor = 'black'
         elCell.style.color = 'rgb(235, 235, 235)'
@@ -132,6 +129,7 @@ function cellClicked(i, j) {
     if (currCell.isShown) return
     else {
         currCell.isShown = true
+        gIsShownCount++
         if (currCell.isMine) {
             currCell = MINE
             gBombsTillLose--
@@ -147,6 +145,7 @@ function cellClicked(i, j) {
                 }
                 elCell.style.backgroundColor = 'rgb(174, 173, 173)'
                 renderCell({ i, j }, currCell)
+                gFlagsNeededCount--
             }
 
             if (gBombsTillLose === 0) {
@@ -159,14 +158,13 @@ function cellClicked(i, j) {
             }
         } else {
             gRegularCells--
-
             currCell.minesAroundCount === 0 ? (currCell = ' ') : (currCell = currCell.minesAroundCount)
             renderCell({ i, j }, currCell)
-
             checkGameOver()
-
             return
         }
+        gGame.shownCount = gIsShownCount
+        gGame.markedCount = gFlagsNeededCount
     }
 }
 
@@ -174,7 +172,7 @@ function createRandomBomb(i, j, num) {
     for (var k = 0; k < num; k++) {
         const location = findEmptyCell(gBoard)
         if (gBoard[location.i][location.j].isMine || (i === location.i && j === location.j)) {
-            i--
+            k--
         } else {
             gBoard[location.i][location.j].isMine = true
         }
@@ -199,6 +197,8 @@ function cellMarked(elCell) {
         renderCell(location, ' ')
     }
     checkGameOver()
+    var flagCount = document.querySelector('.flag-count')
+    flagCount.innerHTML = `<span class="flag-count">🚩 ${gFlagsNeededCount}</span>`
 }
 
 function expandShown(board, elCell, i, j) {

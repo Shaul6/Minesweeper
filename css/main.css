@@ -1,11 +1,16 @@
 body {
     text-align: center;
     background-color: rgb(219, 219, 219);
-    font-family: 'Amatic SC', cursive;
+    font-family: 'Press Start 2P', cursive;
+}
+
+h3 {
+font-size: 50px;
+cursor: pointer;
 }
 
 h1 {
-    color: rgb(0, 0, 0);
+    color: rgb(15, 15, 15);
     font-family: 'Press Start 2P', cursive;
     font-size: 100px;
 }
@@ -28,7 +33,7 @@ table {
 
 .container{
     display: table;
-    margin: 50px auto;
+    margin: 20px auto;
 }
 
 .cell:hover{
@@ -40,3 +45,55 @@ p{
 }
 /* font-family: 'Amatic SC', cursive;
 font-family: 'Press Start 2P', cursive; */
+
+button {
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    width: 120px;
+    height: 50px;
+    font-size: 15px;
+    margin: 0px 5px 0px;
+    background-color: rgb(219, 219, 219);
+}
+
+button:hover{
+    background-color: rgb(255, 213, 61);
+
+}
+button:active{
+    background-color: rgb(255, 232, 147);
+
+}
+
+.hearts{
+    position: absolute;
+    font-size: 30px;
+    left: 800px;
+    top: 200px;
+
+}
+
+.hearts span {
+    display: block;
+}
+
+p {
+    font-family: 'Amatic SC', cursive;
+}
+
+.timer{
+    font-size: 30px;
+    margin-top: 20px;
+    color: rgb(15, 15, 15);
+}
+
+.hints{
+    position: absolute;
+    font-size: 30px;
+    left: 1070px;
+    top: 200px;
+}
+
+.hints span {
+    display: block;
+}

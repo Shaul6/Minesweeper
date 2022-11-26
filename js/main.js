@@ -32,9 +32,14 @@ var gBombsTillLose = 1
 var gFlagsNeededCount = gLevel.MINES
 var gRegularCells = gLevel.SIZE ** 2 - gLevel.MINES
 const gGame = { isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0 }
+var emptySevenCells = []
 var gStartTime
 var gInterval
 var isSevenBoom = false
+var isManualMode = false
+var gIdx = 0
+var gMineCounter = gFlagsNeededCount
+var gManualTimeout
 
 function initGame() {
     gBoard = buildBoard()
@@ -84,14 +89,19 @@ function gameLevel(level) {
     clearInterval(gInterval)
     var elSafe = document.querySelector('.safe-button')
     elSafe.innerHTML = '3 Safe Clicks'
+    var elManual = document.querySelector('.manual-button')
+    elManual.innerHTML = 'Put Your Mines'
     gSafeClicksLeft = 3
     gHintsLeft = 3
+    gIdx = 0
+    emptySevenCells = []
     gLevel = level
     gLevel.SIZE = level.SIZE
     gLevel.MINES = level.MINES
     gGame.isOn = false
     gBombsTillLose = 1
     gFlagsNeededCount = gLevel.MINES
+    gMineCounter = gFlagsNeededCount
     gRegularCells = gLevel.SIZE ** 2 - gLevel.MINES
     const elSmiley = document.querySelector('.smiley')
     const elHeader = document.querySelector('h1')
@@ -115,10 +125,6 @@ function darkMode() {
     if (!isDark) {
         isDark = !isDark
         elBody.style.backgroundColor = 'rgb(15, 15, 15)'
-        // for (var i = 0; i < elCells.length; i++) {
-        //     elCells[i].style.backgroundColor = 'black'
-        //     elCells[i].style.color = 'rgb(235, 235, 235)'
-        // }
         elHeader.style.color = 'rgb(235, 235, 235)'
         elTimer.style.color = 'rgb(235, 235, 235)'
         elButton.innerHTML = 'Bright Mode'
@@ -200,6 +206,18 @@ function flagCounter() {
     flag.innerHTML = strHTML
 }
 
-function sevenBoom(){
+function sevenBoom(level){
     isSevenBoom = !isSevenBoom
+    gameLevel(level) 
+    gGame.isOn = true
+    findEmptySevenCell(gBoard)
+    createRandomSvevenBomb(gLevel.MINES)
+    setMinesNegsCount()
+}
+
+function manualMine(level){
+    isManualMode = true
+    gameLevel(level) 
+    gGame.isOn = true
+
 }

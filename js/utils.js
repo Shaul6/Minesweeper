@@ -16,7 +16,8 @@ function renderBoard(board) {
 
             var cellClass = getClassName({ i: i, j: j })
 
-            strHTML += `\t<td data-i=${i} data-j=${j} class="cell ${cellClass}"  onclick="cellClicked(${i},${j})"  oncontextmenu="javascript:cellMarked(this);return false;">${currCell}</td>`
+            strHTML += `\t<td id=${gIdx} data-i=${i} data-j=${j} class="cell ${cellClass}"  onclick="cellClicked(${i},${j})"  oncontextmenu="javascript:cellMarked(this);return false;">${currCell}</td>`
+            gIdx++
         }
         strHTML += '</tr>\n'
     }
@@ -105,10 +106,38 @@ function activeHint(cellI, cellJ) {
     gHintsLeft--
 }
 
+function createManualMines(i, j) {
+    gBoard[i][j].isMine = true
+    gMineCounter--
+    const location = { i, j }
+    const cellClassName = getClassName(location)
+    var elCell = document.querySelector('.' + cellClassName)
+    elCell.style.backgroundColor = 'rgb(255, 213, 61)'
+    gManualTimeout = setTimeout(() => {
+        elCell.style.backgroundColor = 'grey'
+    }, 500)
+    var elManual = document.querySelector('.manual-button')
+    elManual.innerHTML = `${gMineCounter} Mines left`
+}
+
 function cellClicked(i, j) {
     clearTimeout(gSafeTimeout)
     if (!gGame.isOn) timer()
-    if (gBombsTillLose === 0) return
+    if (isSevenBoom) {
+        timer()
+        isSevenBoom = !isSevenBoom
+    }
+    if (isManualMode) {
+        createManualMines(i, j)
+
+        if (gMineCounter === 0) {
+            clearTimeout(gManualTimeout)
+            isManualMode = !isManualMode
+            setMinesNegsCount()
+            timer()
+        }
+        return
+    } else if (gBombsTillLose === 0) return
     MinesOnFirstClick(i, j)
     const cellClassName = getClassName({ i, j })
     const elCell = document.querySelector('.' + cellClassName)
@@ -123,8 +152,9 @@ function cellClicked(i, j) {
     } else {
         elCell.style.backgroundColor = 'rgb(174, 173, 173)'
     }
-    expandShown(gBoard, elCell, i, j)
+
     var currCell = gBoard[i][j]
+
     if (currCell.isMarked) return
     if (currCell.isShown) return
     else {
@@ -156,15 +186,18 @@ function cellClicked(i, j) {
                 revelBombs()
                 gameOver()
             }
-        } else {
-            gRegularCells--
-            currCell.minesAroundCount === 0 ? (currCell = ' ') : (currCell = currCell.minesAroundCount)
-            renderCell({ i, j }, currCell)
-            checkGameOver()
             return
         }
+        if (!gBoard[i][j].isMine && gBoard[i][j].minesAroundCount === 0) {
+            expandShown(gBoard, i, j)
+        }
+        gRegularCells--
+        currCell.minesAroundCount === 0 ? (currCell = ' ') : (currCell = currCell.minesAroundCount)
+        renderCell({ i, j }, currCell)
+        checkGameOver()
         gGame.shownCount = gIsShownCount
         gGame.markedCount = gFlagsNeededCount
+        return
     }
 }
 
@@ -201,10 +234,14 @@ function cellMarked(elCell) {
     flagCount.innerHTML = `<span class="flag-count">🚩 ${gFlagsNeededCount}</span>`
 }
 
-function expandShown(board, elCell, i, j) {
-    const mineNeighbors = countNeighborsMines(i, j, board)
-    if (mineNeighbors === 0) {
-        clickOnNeighbors(i, j, board)
+function expandShown(mat, cellI, cellJ) {
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= mat.length) continue
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue
+            if (j < 0 || j >= mat[i].length) continue
+            cellClicked(i, j)
+        }
     }
 }
 
@@ -215,31 +252,6 @@ function revelBombs() {
                 gBoard[i][j].isShown = true
                 renderCell({ i, j }, MINE)
             }
-        }
-    }
-}
-
-function clickOnNeighbors(cellI, cellJ, mat) {
-    for (var i = cellI - 1; i <= cellI + 1; i++) {
-        if (i < 0 || i >= mat.length) continue
-        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-            if (i === cellI && j === cellJ) continue
-            if (j < 0 || j >= mat[i].length) continue
-            var currCell = mat[i][j]
-            const cellClassName = getClassName({ i, j })
-            const elCell = document.querySelector('.' + cellClassName)
-            if (!currCell.isShown) {
-                if (!gIsHintActive) gRegularCells--
-            }
-            if (isDark) {
-                elCell.style.backgroundColor = 'black'
-                elCell.style.color = 'rgb(235, 235, 235)'
-            } else {
-                elCell.style.backgroundColor = 'rgb(174, 173, 173)'
-            }
-            currCell.isShown = true
-            currCell.minesAroundCount === 0 ? (currCell = ' ') : (currCell = currCell.minesAroundCount)
-            renderCell({ i, j }, currCell)
         }
     }
 }
@@ -258,6 +270,26 @@ function findEmptyCell(board) {
     const randomNumIdx = getRandomInt(0, emptyCells.length)
     const randomCell = emptyCells[randomNumIdx]
     return randomCell
+}
+
+function findEmptySevenCell(board) {
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            var currIndx = document.querySelector(`.cell-${i}-${j}`).getAttribute('id')
+            if (currIndx.includes('7') || (+currIndx % 7 === 0 && +currIndx !== 0)) {
+                emptySevenCells.push({ i, j })
+            }
+        }
+    }
+}
+
+function createRandomSvevenBomb(num) {
+    for (var k = 0; k < num; k++) {
+        const randomNumIdx = getRandomInt(0, emptySevenCells.length)
+        const location = emptySevenCells[randomNumIdx]
+        emptySevenCells.splice(randomNumIdx, 1)
+        gBoard[location.i][location.j].isMine = true
+    }
 }
 
 function getRandomInt(min, max) {

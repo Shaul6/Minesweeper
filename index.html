@@ -17,19 +17,22 @@
         <button onclick="gameLevel(MEDIUM)">Medium</button>
         <button onclick="gameLevel(HARD)">Hard</button>
         <div class="timer">0.00</div>
-        <div class="flag"> </div>
-        <div class="hearts"> </div>
-        <div class="hints"><span class="hint-3">💡</span><span class="hint-2">💡</span><span class="hint-1">💡</span> </div>
+        <div class="flag"></div>
+        <div class="hearts"></div>
+        <div class="hints"><span class="hint-3">💡</span><span class="hint-2">💡</span><span class="hint-1">💡</span></div>
         <div class="container">
             <table>
                 <tbody class="board"></tbody>
             </table>
         </div>
-        <button class="dark-button" onclick="darkMode()">Dark Mode</button>
-        <button class="live-button" onclick="livesMode()">3 Lives Left</button>
-        <button class="hint-button" onclick="hints()">Active Hint</button>
-        <button class="safe-button" onclick="safeClick()">3 Safe Clicks</button>
-        <button class="seven-button" onclick="sevenBoom()">7 BOOM!</button>
+        <div class="flex-container">
+            <button class="dark-button" onclick="darkMode()">Dark Mode</button>
+            <button class="live-button" onclick="livesMode()">3 Lives Left</button>
+            <button class="hint-button" onclick="hints()">Active Hint</button> <br />
+            <button class="safe-button" onclick="safeClick()">3 Safe Clicks</button>
+            <button class="seven-button" onclick="sevenBoom(gLevel)">7 BOOM!</button>
+            <button class="manual-button" onclick="manualMine(gLevel)">Put Your Mines</button>
+        </div>
         <footer><p>Shaul Gabrieli</p></footer>
         <script src="js/utils.js"></script>
         <script src="js/main.js"></script>
